@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Video Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <h1>AI Music Video Generator</h1>
+
+    <!-- Text Input -->
+    <label for="textInput">Enter Text for Video:</label>
+    <textarea id="textInput" placeholder="Enter your text here..." rows="4"></textarea>
+
+    <!-- Music Genre Dropdown -->
+    <label for="genreSelect">Select Music Genre:</label>
+    <select id="genreSelect">
+      <option value="pop">Pop</option>
+      <option value="rock">Rock</option>
+      <option value="classical">Classical</option>
+      <option value="jazz">Jazz</option>
+    </select>
+
+    <!-- Generate Button -->
+    <button id="generateBtn">Generate Video</button>
+
+    <!-- Loading Indicator -->
+    <div id="loading" style="display: none;">Processing...</div>
+
+    <!-- Video Preview -->
+    <div id="videoPreview" style="display: none;">
+      <h3>Generated Video:</h3>
+      <video id="outputVideo" controls></video>
+    </div>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById("generateBtn");
+    const textInput = document.getElementById("textInput");
+    const genreSelect = document.getElementById("genreSelect");
+    const loading = document.getElementById("loading");
+    const videoPreview = document.getElementById("videoPreview");
+    const outputVideo = document.getElementById("outputVideo");
+
+    generateBtn.addEventListener("click", async () => {
+      const text = textInput.value;
+      const genre = genreSelect.value;
+
+      if (!text) {
+        alert("Please enter some text!");
+        return;
+      }
+
+      loading.style.display = "block";
+      videoPreview.style.display = "none";
+
+      try {
+        const response = await fetch("/generate", {
+          method: "POST",
+          body: new URLSearchParams({ text, genre }),
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          outputVideo.src = data.video_url;
+          videoPreview.style.display = "block";
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert("Error generating video.");
+      } finally {
+        loading.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
