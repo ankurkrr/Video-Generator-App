@@ -37,12 +37,18 @@ This project is a Flask-based application that generates custom videos by:
    cd <repository-folder>
 
 2. Install dependencies:
- ```pip install -r requirements.txt```
-
+   ```bash
+   pip install -r requirements.txt
 
 3. Set up the Pexels API key:
 
 Replace PEXELS_API_KEY in the code with your API key.
 
 4. Run the application
-```python app.py```
+   ```bash
+   python app.py
+
+5. Open the app in your browser:
+   ```bash
+   http://127.0.0.1:5000/
+
